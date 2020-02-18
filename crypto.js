@@ -24,7 +24,7 @@ function scalarMult (sk, pk) {
   return result
 }
 
-function keyPair () {
+function keypair () {
   var ephKeypair = {}
   ephKeypair.publicKey = sodium.sodium_malloc(KEYBYTES)
   ephKeypair.secretKey = sodium.sodium_malloc(KEYBYTES)
@@ -34,12 +34,11 @@ function keyPair () {
 
 function box (pubKey, messageBuffer, contextMessage) {
   var boxed = Buffer.alloc(messageBuffer.length + sodium.crypto_secretbox_MACBYTES)
-  const ephKeypair = keyPair()
+  const ephKeypair = keypair()
   const nonce = randomBytes(NONCEBYTES)
   var sharedSecret = genericHash(
     concat([ephKeypair.publicKey, pubKey, contextMessage]),
     genericHash(scalarMult(ephKeypair.secretKey, pubKey)))
-
   secretBox(boxed, messageBuffer, nonce, sharedSecret)
 
   zero(sharedSecret)
@@ -68,5 +67,5 @@ function unbox (cipherText, ephKeypair, contextMessage) {
 }
 
 module.exports = {
-  keyPair, unbox, box, genericHash
+  keypair, unbox, box, genericHash
 }
