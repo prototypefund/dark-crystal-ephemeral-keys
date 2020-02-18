@@ -56,50 +56,51 @@ describe('Ephemeral Keys', context => {
       })
     })
   })
-  //
-  // context('Returns an error when given the wrong message to decrypt', (assert, next) => {
-  //   server.ephemeral.generateAndStore(dbKey, (err, pk) => {
-  //     if (err) console.error(err)
-  //     server.ephemeral.boxMessage(message, pk, contextMessage, (err, boxedMsg) => {
-  //       assert.notOk(err, 'error from boxMessage is null')
-  //       boxedMsg = 'something else.box'
-  //       server.ephemeral.unBoxMessage(dbKey, boxedMsg, contextMessage, (err, msg) => {
-  //         assert.ok(err, 'throws error')
-  //         assert.notOk(msg, 'message is null')
-  //         next()
-  //       })
-  //     })
-  //   })
-  // })
-  //
-  // context('Returns an error when ciphertext has incorrect suffix', (assert, next) => {
-  //   server.ephemeral.generateAndStore(dbKey, (err, pk) => {
-  //     if (err) console.error(err)
-  //     server.ephemeral.boxMessage(message, pk, contextMessage, (err, boxedMsg) => {
-  //       assert.notOk(err, 'error from boxMessage is null')
-  //       boxedMsg = boxedMsg + '.wrong'
-  //       server.ephemeral.unBoxMessage(dbKey, boxedMsg, contextMessage, (err, msg) => {
-  //         assert.ok(err, 'throws error')
-  //         assert.notOk(msg, 'message is null')
-  //         next()
-  //       })
-  //     })
-  //   })
-  // })
-  //
-  // context('Throws an error when given an incorrect key', (assert, next) => {
-  //   server.ephemeral.generateAndStore(dbKey, (err, pk) => {
-  //     assert.notOk(err, 'error from generating and storing keys is null')
-  //     server.ephemeral.boxMessage(message, pk, contextMessage, (err, boxedMsg) => {
-  //       assert.notOk(err, 'error from boxMessage is null')
-  //       server.ephemeral.unBoxMessage('the wrong key', boxedMsg, contextMessage, (err, msg) => {
-  //         assert.ok(err, 'throws error')
-  //         assert.notOk(msg, 'msg is null')
-  //         next()
-  //       })
-  //     })
-  //   })
-  // })
+
+  context('Returns an error when given the wrong message to decrypt', (assert, next) => {
+    eph.generateAndStore(dbKey, (err, pk) => {
+      if (err) console.error(err)
+      eph.boxMessage(message, pk, contextMessage, (err, boxedMsg) => {
+        assert.notOk(err, 'error from boxMessage is null')
+        const change = Buffer.from('something')
+        boxedMsg = Buffer.concat([change, boxedMsg.slice(change.length)])
+        eph.unBoxMessage(dbKey, boxedMsg, contextMessage, (err, msg) => {
+          assert.ok(err, 'throws error')
+          assert.notOk(msg, 'message is null')
+          next()
+        })
+      })
+    })
+  })
+
+  context('Returns an error when ciphertext has incorrect suffix', (assert, next) => {
+    eph.generateAndStore(dbKey, (err, pk) => {
+      if (err) console.error(err)
+      eph.boxMessage(message, pk, contextMessage, (err, boxedMsg) => {
+        assert.notOk(err, 'error from boxMessage is null')
+        boxedMsg = Buffer.concat([boxedMsg, Buffer.from('wrong')])
+        eph.unBoxMessage(dbKey, boxedMsg, contextMessage, (err, msg) => {
+          assert.ok(err, 'throws error')
+          assert.notOk(msg, 'message is null')
+          next()
+        })
+      })
+    })
+  })
+
+  context('Throws an error when given an incorrect db key', (assert, next) => {
+    eph.generateAndStore(dbKey, (err, pk) => {
+      assert.notOk(err, 'error from generating and storing keys is null')
+      eph.boxMessage(message, pk, contextMessage, (err, boxedMsg) => {
+        assert.notOk(err, 'error from boxMessage is null')
+        eph.unBoxMessage('something else', boxedMsg, contextMessage, (err, msg) => {
+          assert.ok(err, 'throws error')
+          assert.notOk(msg, 'msg is null')
+          next()
+        })
+      })
+    })
+  })
   //
   // context('Throws error on encountering unsupported key type')
 })

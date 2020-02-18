@@ -18,7 +18,6 @@ module.exports = (options) => new EphemeralKeys(options)
 class EphemeralKeys {
   constructor (options = {}) {
     this.dir = options.dir || '.'
-    console.log(this.dir)
     this.cipherTextSuffix = options.cipherTextSuffix || Buffer.from('ephemeral')
   }
 
