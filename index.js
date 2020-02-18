@@ -23,7 +23,7 @@ class EphemeralKeys {
   }
 
   generateAndStore (dbKey, callback) {
-    const ephKeypair = s.encryptionKeypair()
+    const ephKeypair = crypto.keypair()
     const ephKeypairEncoded = messages.Keypair.encode(ephKeypair)
     // TODO: check that there does not already exist a keypair with this key
     assert(dbKey, 'A database key must be given')
@@ -42,7 +42,7 @@ class EphemeralKeys {
     // const contextMessage = Buffer.from(contextMessageString, 'utf-8')
 
     // callback(null, encryptMessage(publicKey, message, contextMessage) + cipherTextSuffix)
-    callback(null, Buffer.concat([crypto.box(message, publicKey, contextMessage), this.cipherTextSuffix]))
+    callback(null, Buffer.concat([crypto.box(publicKey, message, contextMessage), this.cipherTextSuffix]))
   }
 
   unBoxMessage (dbKey, cipherText, contextMessage, callback) {
@@ -55,6 +55,7 @@ class EphemeralKeys {
     if (cipherText.slice(-1 * this.cipherTextSuffix.length).toString('hex') !== this.cipherTextSuffix.toString('hex')) {
       return callback(new Error('Ciphertext must end in ' + this.cipherTextSuffix.toString()))
     }
+    cipherText = cipherText.slice(0, -1 * this.cipherTextSuffix.length)
 
     assert(dbKey, 'A database key must be given')
     fs.readFile(this._buildFileName(dbKey), (err, data) => {
@@ -65,7 +66,6 @@ class EphemeralKeys {
       } catch (err) {
         return callback(err)
       }
-
       // const plainText = decryptMessage(cipherText, ephKeypair, contextMessage)
       const plainText = crypto.unbox(cipherText, ephKeypair, contextMessage)
       if (!plainText) {
