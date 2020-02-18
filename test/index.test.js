@@ -20,7 +20,7 @@ describe('Ephemeral Keys', context => {
         assert.error(err, 'No error from boxMessage')
         eph.unBoxMessage(dbKey, boxedMsg, contextMessage, (err, msg) => {
           assert.error(err, 'No error from unbox')
-          assert.equal(message, msg, 'output is the same as input')
+          assert.equal(message.toString('hex'), msg.toString('hex'), 'output is the same as input')
           eph.deleteKeyPair(dbKey, (err) => {
             assert.error(err, 'No error from delete Keypair')
             eph.unBoxMessage(dbKey, boxedMsg, contextMessage, (err, msg) => {
