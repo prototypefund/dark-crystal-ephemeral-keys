@@ -1,0 +1,22 @@
+{
+  "name": "ephemeral-keys",
+  "version": "1.0.0",
+  "description": "Ephemeral keys for one-time encrypted messages",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/**/*.test.js | tap-spec"
+  },
+  "author": "",
+  "license": "AGPL-3.0-or-later",
+  "devDependencies": {
+    "tap-spec": "^5.0.0",
+    "tape": "^4.13.0",
+    "tape-plus": "^1.0.0",
+    "tmp": "^0.1.0"
+  },
+  "dependencies": {
+    "key-backup-crypto": "git+https://gitlab.com/dark-crystal/key-backup-crypto.git",
+    "protocol-buffers": "^4.1.2",
+    "skrub": "^1.4.0"
+  }
+}
