@@ -56,11 +56,11 @@ the public key to be included in a request in the callback.
 - `databaseKey` may be a string or an object
 - callback returns a buffer
 
-### `boxMessage(message, recipientPublicKey, contextMessage, callback)` 
+### `const boxedMessage = boxMessage(message, recipientPublicKey, contextMessage)` 
 
-This function will generate a keypair, encrypt a given shard to
+This synchronous function will generate a keypair, encrypt a given shard to
 a given ephemeral public key, delete the generated private key, 
-and return the encrypted message in the callback.
+and return the encrypted message.
  
 The context message is a string or buffer which is added to the shared
 secret so that it may only be used for a specific purpose.

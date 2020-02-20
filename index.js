@@ -34,14 +34,14 @@ class EphemeralKeys {
     })
   }
 
-  boxMessage (message, publicKey, contextMessage, callback) {
+  boxMessage (message, publicKey, contextMessage) {
     assert(Buffer.isBuffer(message), 'Message must be a buffer')
     if (typeof publicKey === 'string') publicKey = Buffer.from(publicKey, 'hex')
 
     if (typeof contextMessage === 'object') contextMessage = JSON.stringify(contextMessage)
     if (typeof contextMessage === 'string') contextMessage = Buffer.from(contextMessage)
 
-    callback(null, Buffer.concat([crypto.box(publicKey, message, contextMessage), this.cipherTextSuffix]))
+    return Buffer.concat([crypto.box(publicKey, message, contextMessage), this.cipherTextSuffix])
   }
 
   unBoxMessage (dbKey, cipherText, contextMessage, callback) {
