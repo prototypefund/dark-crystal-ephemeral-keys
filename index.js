@@ -36,20 +36,16 @@ class EphemeralKeys {
     assert(Buffer.isBuffer(message), 'Message must be a buffer')
     if (typeof publicKey === 'string') publicKey = Buffer.from(publicKey, 'hex')
 
-    // if (typeof contextMessageString === 'object') contextMessageString = JSON.stringify(contextMessageString)
-    // assert(typeof contextMessageString === 'string', 'Context message must be a string')
-    // const contextMessage = Buffer.from(contextMessageString, 'utf-8')
+    if (typeof contextMessage === 'object') contextMessage = JSON.stringify(contextMessage)
+    if (typeof contextMessage === 'string') contextMessage = Buffer.from(contextMessage)
 
-    // callback(null, encryptMessage(publicKey, message, contextMessage) + cipherTextSuffix)
     callback(null, Buffer.concat([crypto.box(publicKey, message, contextMessage), this.cipherTextSuffix]))
   }
 
   unBoxMessage (dbKey, cipherText, contextMessage, callback) {
-    // if (typeof contextMessageString === 'object') contextMessageString = JSON.stringify(contextMessageString)
-    // assert(typeof contextMessageString === 'string', 'Context message must be a string')
-    // const contextMessage = Buffer.from(contextMessageString, 'utf-8')
-
     assert(Buffer.isBuffer(cipherText), 'Ciphertext must be a buffer')
+    if (typeof contextMessage === 'object') contextMessage = JSON.stringify(contextMessage)
+    if (typeof contextMessage === 'string') contextMessage = Buffer.from(contextMessage)
 
     if (cipherText.slice(-1 * this.cipherTextSuffix.length).toString('hex') !== this.cipherTextSuffix.toString('hex')) {
       return callback(new Error('Ciphertext must end in ' + this.cipherTextSuffix.toString()))
@@ -65,7 +61,6 @@ class EphemeralKeys {
       } catch (err) {
         return callback(err)
       }
-      // const plainText = decryptMessage(cipherText, ephKeypair, contextMessage)
       const plainText = crypto.unbox(cipherText, ephKeypair, contextMessage)
       if (!plainText) {
         callback(new Error('Decryption failed'))
