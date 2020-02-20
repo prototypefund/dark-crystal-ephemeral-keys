@@ -82,7 +82,7 @@ class EphemeralKeys {
 
   isBoxedMessage (buf) {
     if (buf.length < this.cipherTextSuffix.length) return false
-    return (buf.slice(-1 * this.cipherTextSuffix.length) === this.cipherTextSuffix)
+    return (buf.slice(-1 * this.cipherTextSuffix.length).toString() === this.cipherTextSuffix.toString())
   }
 
   _buildFileName (dbKey) {
