@@ -3,6 +3,7 @@ const assert = require('assert')
 const skrub = require('skrub')
 const protobuf = require('protocol-buffers')
 const path = require('path')
+const mkdirp = require('mkdirp').sync
 const s = require('key-backup-crypto')
 const crypto = require('./crypto')
 
@@ -18,6 +19,7 @@ module.exports = (options) => new EphemeralKeys(options)
 class EphemeralKeys {
   constructor (options = {}) {
     this.dir = options.dir || '.'
+    if (this.dir !== '.') mkdirp(this.dir)
     this.cipherTextSuffix = options.cipherTextSuffix || Buffer.from('ephemeral')
   }
 

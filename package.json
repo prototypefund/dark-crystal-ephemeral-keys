@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "key-backup-crypto": "git+https://gitlab.com/dark-crystal/key-backup-crypto.git",
+    "mkdirp": "^1.0.3",
     "protocol-buffers": "^4.1.2",
     "skrub": "^1.4.0"
   }
